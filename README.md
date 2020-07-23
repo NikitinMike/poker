@@ -1,6 +1,6 @@
 # poker
 
-usage: run.bat <images dir>
+usage: run.bat imagesDirectory
  
 before run.bat execute 
 
