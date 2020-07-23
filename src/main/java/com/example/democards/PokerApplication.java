@@ -92,7 +92,7 @@ public class PokerApplication {
         if (167 <= s && s <= 177) return "7";
         if (144 <= sf && sf <= 149) return "8";
         if (280 <= s && s <= 289) return "9";
-        if (380 <= s && s <= 406) return "1";
+        if (380 <= s && s <= 406) return "10";
         if (153 <= s && s <= 161) return "J";
         if (336 <= s && s <= 346) return "Q";
         if (pos == 0 && s == 249) return "K";
