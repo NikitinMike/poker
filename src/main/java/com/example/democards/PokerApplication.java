@@ -1,8 +1,5 @@
 package com.example.democards;
-
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -12,32 +9,29 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@SpringBootApplication
-public class DemocardsApplication {
+public class PokerApplication {
 
     static final Color selected = new Color(120, 120, 120);
     static final Integer selectedRGB = selected.getRGB();
     static final Integer whiteRGB = -1;
 
     public static void main(String[] args) {
-        String files = "C:\\Users\\mike\\Desktop\\democards\\imgs";
-        SpringApplication.run(DemocardsApplication.class, args);
-        int n = 0;
-        for (String path : listFiles(files))
+        SpringApplication.run(PokerApplication.class, args);
+        for (String path : listFiles(args[0]))
             try {
-                readDataFile(new File(path), ++n);
+                readDataFile(new File(path));
             } catch (IOException e) {
                 System.out.println("File error" + path);
             }
     }
 
-    static void readDataFile(File file, int n) throws IOException {
+    static void readDataFile(File file) throws IOException {
         BufferedImage img = ImageIO.read(file); // 636:1166
-        String cards = "";
+        StringBuilder cards = new StringBuilder();
         for (int i = 0; i < 5; i++)
-            cards += getSuit(img, 167 + 72 * i, 633)
-                    + getValue(img, i, 147 + 72 * i, 590, 33, 26, false);
-        System.out.printf("\n %d [%s] %s", n, file.getName(), cards);
+            cards.append(getSuit(img, 167 + 72 * i, 633))
+                .append(getValue(img, i, 147 + 72 * i, 590, 33, 26, false));
+        System.out.println(file.getName()+" "+cards.toString());
     }
 
     static Set<String> listFiles(String dir) {
@@ -81,8 +75,7 @@ public class DemocardsApplication {
         if (!c.equals(Color.WHITE) && !c.equals(selected)) return "";
         int[] data = img.getRGB(x, y, 35, 34, null, 0, 35);
         int s = 0;
-        for (int i = 0; i < data.length; i++)
-            if (data[i] == whiteRGB || data[i] == selectedRGB) s++;
+        for (int datum : data) if (datum == whiteRGB || datum == selectedRGB) s++;
         if (640 < s && s < 660) return "d";
         if (590 < s && s < 610) return "h";
         if (560 < s && s < 580) return "s";
