@@ -1,5 +1,7 @@
 package com.example.democards;
+
 import org.springframework.boot.SpringApplication;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -11,9 +13,12 @@ import java.util.stream.Stream;
 
 public class PokerApplication {
 
-    static final Color selected = new Color(120, 120, 120);
-    static final Integer selectedRGB = selected.getRGB();
-    static final Integer whiteRGB = -1;
+    static final Color SELECTEDRGB = new Color(120, 120, 120);
+    static final Integer selected = SELECTEDRGB.getRGB();
+    static final Integer white = -1;
+    static final int cardWidth = 72;
+    static final int fieldUp = 590;
+    static final int fieldLeft = 147;
 
     public static void main(String[] args) {
         SpringApplication.run(PokerApplication.class, args);
@@ -29,9 +34,9 @@ public class PokerApplication {
         BufferedImage img = ImageIO.read(file); // 636:1166
         StringBuilder cards = new StringBuilder();
         for (int i = 0; i < 5; i++)
-            cards.append(getSuit(img, 167 + 72 * i, 633))
-                .append(getValue(img, i, 147 + 72 * i, 590, 33, 26, false));
-        System.out.println(file.getName()+" "+cards.toString());
+            cards.append(getSuit(img, fieldLeft+20 + cardWidth * i, fieldUp+43))
+                .append(getValue(img, i, fieldLeft + cardWidth * i, fieldUp, 33, 26));
+        System.out.println(file.getName() + " " + cards.toString());
     }
 
     static Set<String> listFiles(String dir) {
@@ -41,9 +46,9 @@ public class PokerApplication {
                 .collect(Collectors.toSet());
     }
 
-    static String getValue(BufferedImage img, int pos, int x, int y, int w, int h, boolean flag) {
+    static String getValue(BufferedImage img, int pos, int x, int y, int w, int h) {
         Color c = new Color(img.getRGB(x + w, y + 1));
-        if (!c.equals(Color.WHITE) && !c.equals(selected)) return "";
+        if (!c.equals(Color.WHITE) && !c.equals(SELECTEDRGB)) return "";
         int ss = 0;
         int sf = 0;
         int j = 0;
@@ -51,19 +56,19 @@ public class PokerApplication {
         int[] data = img.getRGB(x, y, w, h, null, 0, w);
         for (int i = 0; i < data.length; i++) {
             if ((i % w) == 0) j++;
-            if (data[i] != whiteRGB && data[i] != selectedRGB) {
-                if ( checkArea(img, whiteRGB, x + i % w, y + j)
-                    && checkArea(img, selectedRGB, x + i % w, y + j)) ss++; else sf++;
+            if (data[i] != white && data[i] != selected) {
+                if (checkArea(img, white, x + i % w, y + j)
+                        && checkArea(img, selected, x + i % w, y + j)) ss++;
+                else sf++;
                 res[j]++;
             }
         }
-        return getRank(pos, sf, ss, res[11] + res[12] + res[13] + res[14]);
+        return getRank(pos, sf, ss,res[11] + res[12] + res[13] + res[14]);
     }
 
     private static boolean checkArea(BufferedImage img, int color, int x, int y) {
         return img.getRGB(x + 1, y) != color && img.getRGB(x - 1, y) != color
-                && img.getRGB(x, y + 1) != color
-                && img.getRGB(x, y - 1) != color
+                && img.getRGB(x, y + 1) != color && img.getRGB(x, y - 1) != color
                 && img.getRGB(x + 1, y + 1) != color
                 && img.getRGB(x - 1, y - 1) != color
                 && img.getRGB(x + 1, y - 1) != color
@@ -72,10 +77,10 @@ public class PokerApplication {
 
     static String getSuit(BufferedImage img, int x, int y) {
         Color c = new Color(img.getRGB(x + 1, y + 1));
-        if (!c.equals(Color.WHITE) && !c.equals(selected)) return "";
+        if (!c.equals(Color.WHITE) && !c.equals(SELECTEDRGB)) return "";
         int[] data = img.getRGB(x, y, 35, 34, null, 0, 35);
         int s = 0;
-        for (int datum : data) if (datum == whiteRGB || datum == selectedRGB) s++;
+        for (int datum : data) if (datum == white || datum == selected) s++;
         if (640 < s && s < 660) return "d";
         if (590 < s && s < 610) return "h";
         if (560 < s && s < 580) return "s";
