@@ -34,8 +34,8 @@ public class PokerApplication {
         BufferedImage img = ImageIO.read(file); // 636:1166
         StringBuilder cards = new StringBuilder();
         for (int i = 0; i < 5; i++)
-            cards.append(getSuit(img, fieldLeft+20 + cardWidth * i, fieldUp+43))
-                .append(getValue(img, i, fieldLeft + cardWidth * i, fieldUp, 33, 26));
+            cards.append(getSuit(img, fieldLeft + 20 + cardWidth * i, fieldUp + 43))
+                    .append(getValue(img, i, fieldLeft + cardWidth * i, fieldUp, 33, 26));
         System.out.println(file.getName() + " " + cards.toString());
     }
 
@@ -58,21 +58,24 @@ public class PokerApplication {
             if ((i % w) == 0) j++;
             if (data[i] != white && data[i] != selected) {
                 if (checkArea(img, white, x + i % w, y + j)
-                        && checkArea(img, selected, x + i % w, y + j)) ss++;
-                else sf++;
+                        || checkArea(img, selected, x + i % w, y + j)) {
+                    sf++;
+                } else {
+                    ss++;
+                }
                 res[j]++;
             }
         }
-        return getRank(pos, sf, ss,res[11] + res[12] + res[13] + res[14]);
+        return getRank(pos, sf, ss, res[11] + res[12] + res[13] + res[14]);
     }
 
     private static boolean checkArea(BufferedImage img, int color, int x, int y) {
-        return img.getRGB(x + 1, y) != color && img.getRGB(x - 1, y) != color
-                && img.getRGB(x, y + 1) != color && img.getRGB(x, y - 1) != color
-                && img.getRGB(x + 1, y + 1) != color
-                && img.getRGB(x - 1, y - 1) != color
-                && img.getRGB(x + 1, y - 1) != color
-                && img.getRGB(x - 1, y + 1) != color;
+        return (img.getRGB(x + 1, y) == color || img.getRGB(x - 1, y) == color
+                || img.getRGB(x, y + 1) == color || img.getRGB(x, y - 1) == color
+                || img.getRGB(x + 1, y + 1) == color
+                || img.getRGB(x - 1, y - 1) == color
+                || img.getRGB(x + 1, y - 1) == color
+                || img.getRGB(x - 1, y + 1) == color);
     }
 
     static String getSuit(BufferedImage img, int x, int y) {
