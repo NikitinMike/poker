@@ -78,12 +78,12 @@ public class PokerApplication {
         Color c = new Color(img.getRGB(x + 1, y + 1));
         if (!c.equals(Color.WHITE) && !c.equals(SELECTEDRGB)) return "";
         int[] data = img.getRGB(x, y, 35, 34, null, 0, 35);
-        int s = 0;
-        for (int datum : data) if (datum == white || datum == selected) s++;
-        if (640 < s && s < 660) return "d";
-        if (590 < s && s < 610) return "h";
-        if (560 < s && s < 580) return "s";
-        if (530 < s && s <= 560) return "c";
+        int criteria = 0;
+        for (int datum : data) if (datum == white || datum == selected) criteria++;
+        if (640 < criteria && criteria < 660) return "d";
+        if (590 < criteria && criteria < 610) return "h";
+        if (560 < criteria && criteria < 580) return "s";
+        if (530 < criteria && criteria <= 560) return "c";
         return " ";
     }
 
