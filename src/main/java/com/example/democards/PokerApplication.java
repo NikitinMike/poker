@@ -26,7 +26,7 @@ public class PokerApplication {
             try {
                 readDataFile(new File(path));
             } catch (IOException e) {
-                System.out.println("File error" + path);
+                System.out.println("File error " + path);
             }
     }
 
@@ -56,15 +56,11 @@ public class PokerApplication {
         int[] data = img.getRGB(x, y, w, h, null, 0, w);
         for (int i = 0; i < data.length; i++) {
             if ((i % w) == 0) j++;
-            if (data[i] != white && data[i] != selected) {
-                if (checkArea(img, white, x + i % w, y + j)
-                        || checkArea(img, selected, x + i % w, y + j)) {
-                    sf++;
-                } else {
-                    ss++;
-                }
-                res[j]++;
-            }
+            if (data[i] == white || data[i] == selected) continue;
+            if (checkArea(img, white, x + i % w, y + j)
+                || checkArea(img, selected, x + i % w, y + j)) sf++;
+            else ss++;
+            res[j]++;
         }
         return getRank(pos, sf, ss, res[11] + res[12] + res[13] + res[14]);
     }
